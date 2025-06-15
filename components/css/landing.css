@@ -1,0 +1,25 @@
+.landingsection {
+    background-image: url("/images/room.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: blur(2px);
+}
+
+.landingTitle {
+    font-size: 5vw;
+    /* font-size: 80px; */
+    color: white;
+}
+
+.difficultybarLanding {
+    height: 40px;
+    border-bottom-left-radius: 15px;
+    border-top-left-radius: 15px;
+    font-weight: bold;
+    font-size: x-large;
+    padding-left: 15px;
+}

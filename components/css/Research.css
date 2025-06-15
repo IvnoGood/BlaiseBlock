@@ -1,0 +1,9 @@
+.ResearchBody {
+    background-image: url('/images/room.jpg');
+    background-size: cover;
+}
+
+.filterSection {
+    mask: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%);
+    /* background: linear-gradient(transparent, #ffffff); */
+}
