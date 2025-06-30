@@ -6,13 +6,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    filter: blur(2px);
-}
-
-.landingTitle {
-    font-size: 5vw;
-    /* font-size: 80px; */
-    color: white;
 }
 
 .difficultybarLanding {

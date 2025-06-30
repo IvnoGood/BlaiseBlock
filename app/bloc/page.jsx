@@ -6,6 +6,7 @@ import '@/components/css/Research.css'
 import { supabase } from "@/components/supabase/supabaseClient";
 import { EditPost } from '@/components/ui/EditPost';
 import { motion, AnimatePresence } from "framer-motion";
+import FilterSection from "@/components/ui/FilterSection";
 
 export default function BlocRecherche() {
     const [prises, setPrises] = useState('');
@@ -14,6 +15,8 @@ export default function BlocRecherche() {
     const [addPostDp, setAddPostDp] = useState("none");
     const [posts, setPosts] = useState([]);
     const [more, setSeemore] = useState();
+
+    const [filters, setFilters] = useState()
 
     const [editMenu, setEditMenu] = useState();
 
@@ -63,11 +66,12 @@ export default function BlocRecherche() {
 
             <div className="py-16 bg-[#18181b] min-h-screen ResearchBody">
 
-                <section className="pt-5 px-6 flex backdrop-brightness-50 w-full h-20 content-center filterSection gap-3">
+                {/* <section className="pt-5 px-6 flex backdrop-brightness-50 w-full h-20 content-center filterSection gap-3">
                     <input type="text" />
                     <button className="py-3 bg-purple-600 hover:bg-purple-700 text-white rounded transition px-6 h-11 cursor-pointer" onClick={() => CallCPublish()}>Publier</button>
                     <button className="py-3 bg-red-600 hover:bg-red-700 text-white rounded transition px-6 h-11 cursor-pointer" onClick={() => GetPosts()}>Fetch ()</button>
-                </section>
+                </section> */}
+                <FilterSection setFilters={setFilters} filters={filters}></FilterSection>
 
                 <section className="mt-15 p-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -129,3 +129,8 @@ footer {
             #e1306c,
             #fd1f1f);
 }
+
+.example-2 .icon-content a[data-social="pearltrees"] .filled,
+.example-2 .icon-content a[data-social="pearltrees"]~.tooltip {
+    background-color: #507ca4;
+}

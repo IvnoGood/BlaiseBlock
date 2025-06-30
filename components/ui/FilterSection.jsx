@@ -11,8 +11,8 @@ export default function FilterSection({ filters, setFilters }) {
                         type="text"
                         placeholder="Search posts..."
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        value={filters.search}
-                        onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                    /* value={filters.search} */
+                    /* onChange={(e) => setFilters({ ...filters, search: e.target.value })} */
                     />
                 </div>
 
@@ -20,8 +20,8 @@ export default function FilterSection({ filters, setFilters }) {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                     <select
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        value={filters.category}
-                        onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+                    /* value={filters.category} */
+                    /* onChange={(e) => setFilters({ ...filters, category: e.target.value })} */
                     >
                         {categories.map(cat => (
                             <option key={cat} value={cat}>{cat}</option>
@@ -33,8 +33,8 @@ export default function FilterSection({ filters, setFilters }) {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
                     <select
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        value={filters.difficulty}
-                        onChange={(e) => setFilters({ ...filters, difficulty: e.target.value })}
+                    /* value={filters.difficulty} */
+                    /* onChange={(e) => setFilters({ ...filters, difficulty: e.target.value })} */
                     >
                         {difficulties.map(diff => (
                             <option key={diff} value={diff}>{diff}</option>
@@ -51,7 +51,7 @@ export default function FilterSection({ filters, setFilters }) {
                     Reset filters
                 </button>
                 <span className="text-sm text-gray-500">
-                    {filters.search || filters.category !== "All" || filters.difficulty !== "All" ? "Filters applied" : ""}
+                    {/* {filters.search || filters.category !== "All" || filters.difficulty !== "All" ? "Filters applied" : ""} */}
                 </span>
             </div>
         </div>

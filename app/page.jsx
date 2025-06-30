@@ -1,5 +1,6 @@
 import "@/components/css/landing.css"
 import Image from "next/image"
+import Link from "next/link";
 import { Inknut_Antiqua } from 'next/font/google';
 
 const inknutAntiqua = Inknut_Antiqua({
@@ -21,18 +22,18 @@ export default function BouldersPage() {
   ];
 
 
-  
+
 
   return (
-    <>
-      <section className="h-screen landingsection">
-        <div className="flex items-end flex-col absolute z-1">
-          <h1 className={`${inknutAntiqua.className} landingTitle`}>Blaise Pascal Bloc</h1>
+    <div /* className="snap-proximity snap-y overflow-y-scroll" */>
+      <section className="h-screen landingsection snap-start">
+        <div className="flex flex-col absolute z-1 content-center p-15">
+          <h1 className={`${inknutAntiqua.className} text-white text-7xl`}>Blaise Pascal Bloc</h1>
           <p className={`${inknutAntiqua.className} text-white text-xl`}>Reference Bloc</p>
         </div>
       </section>
 
-      <section className="bg-[#0d0d0d] text-white font-sans min-h-screen overflow-hidden">
+      <section className="bg-gray-900 text-white font-sans min-h-screen overflow-hidden snap-start">
         <div className="pt-12 min-h-screen flex flex-col align-end">
           <h1 className="text-4xl font-bold mb-8 text-center capitalize">échelle De difficultée</h1>
 
@@ -66,14 +67,14 @@ export default function BouldersPage() {
         </div>
       </section>
 
-      <section className="bg-[#0d0d0d] text-white font-sans min-h-screen overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6 py-12">
+      <section className="bg-gray-900 text-white font-sans min-h-screen overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6 py-12 items-center flex flex-col">
           <h1 className="text-4xl font-bold mb-8 text-center">Blocs a la une</h1>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-5">
             {bouldersLarge.map((boulder, idx) => (
-              <div key={idx} className="bg-[#1a1a1a] rounded-2xl shadow-md p-6 hover:shadow-lg transition max-w-100">
-                <Image src={boulder.image} alt="boulderImage" className="rounded-2xl hidden md:block" width={304} height={380} />
+              <div key={idx} className="bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition max-w-100">
+                <Image src={boulder.image} alt="boulderImage" className="rounded-2xl" width={304} height={380} />
                 <div>
                   <h2 className="text-2xl font-semibold mb-2 rounded-2xl">{boulder.name}</h2>
                   <p className="text-gray-400">Grade: {boulder.grade}</p>
@@ -83,9 +84,9 @@ export default function BouldersPage() {
             ))}
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
             {boulders.map((boulder, idx) => (
-              <div key={idx} className="bg-[#1a1a1a] rounded-2xl shadow-md p-6 hover:shadow-lg transition">
+              <div key={idx} className="bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition min-w-20">
                 <h2 className="text-2xl font-semibold mb-2">{boulder.name}</h2>
                 <p className="text-gray-400">Grade: {boulder.grade}</p>
                 <p className="text-gray-50  0 text-sm">Location: {boulder.location}</p>
@@ -95,69 +96,67 @@ export default function BouldersPage() {
         </div>
       </section>
 
-      <section className="bg-[#0d0d0d] py-20 px-25">
-        <div className="text-center">
-          <div className="flex flex-row justify-center">
-            <Image
-              src="/images/schema.PNG"
-              alt="Bouldering action"
-              className="rounded-2xl shadow-lg"
-              width={600}
-              height={300}
-            />
-            <div>
-              <form action="/bloc" className="flex flex-col gap-5 ml-15 p-3">
+      <section className="bg-gray-900 py-20 px-25">
+        <div className="flex flex-row justify-center flex-wrap gap-15">
+          <Image
+            src="/images/schema.PNG"
+            alt="Bouldering action"
+            className="rounded-2xl shadow-lg"
+            width={600}
+            height={300}
+          />
+          <div>
+            <form action="/bloc" className="flex flex-col gap-5 p-3">
 
-                <div className="flex items-center gap-5">
-                  <label htmlFor="niveau" className="block mb-2 text-sm font-medium text-gray-300">
-                    Types de prises:
-                  </label>
-                  <select name="prises" id="prises" className="text-white rounded-2xl border-1 bg-[#1a1a1a] h-10 border-gray-700">
-                    <option value="pinces">Pinces</option>
-                    <option value="bacs">Bacs</option>
-                    <option value="reglettes">Réglettes</option>
-                    <option value="boules">Boules</option>
-                  </select>
-                </div>
+              <div>
+                <label htmlFor="niveau" className="block mb-2 text-sm font-medium text-gray-300 text-nowrap">
+                  Prises:
+                </label>
+                <select name="prises" id="prises" className="text-white rounded-2xl border-2 bg-gray-800 h-10 border-gray-700 focus:ring-purple-600 focus:border-purple-600 w-full">
+                  <option value="pinces">Pinces</option>
+                  <option value="bacs">Bacs</option>
+                  <option value="reglettes">Réglettes</option>
+                  <option value="boules">Boules</option>
+                </select>
+              </div>
 
-                <div className="flex items-center gap-5">
-                  <label htmlFor="niveau" className="block mb-2 text-sm font-medium text-gray-300">
-                    Types de mouvements:
-                  </label>
-                  <select name="mouvements" id="mouvements" className="text-white rounded-2xl border-1 bg-[#1a1a1a] h-10 border-gray-700">
-                    <option value="statique">Statique</option>
-                    <option value="dynamique-balance">Dynamique balancé</option>
-                  </select>
-                </div>
+              <div>
+                <label htmlFor="niveau" className="block mb-2 text-sm font-medium text-gray-300 text-nowrap">
+                  Mouvements:
+                </label>
+                <select name="mouvements" id="mouvements" className="text-white rounded-2xl border-2 bg-gray-800 h-10 border-gray-700 focus:ring-purple-600 focus:border-purple-600 w-full pr-5">
+                  <option value="statique">Statique</option>
+                  <option value="dynamique-balance">Dynamique balancé</option>
+                </select>
+              </div>
 
-                <div className="flex items-center gap-5">
-                  <label htmlFor="niveau" className="block mb-2 text-sm font-medium text-gray-300">
-                    Niveau de difficulté:
-                  </label>
-                  <select name="niveau" id="niveau" className="text-white rounded-2xl border-1 bg-[#1a1a1a] h-10 border-gray-700 w-30">
-                    <option value="V5">V5</option>
-                    <option value="V4">V4</option>
-                    <option value="V3">V3</option>
-                    <option value="V2">V2</option>
-                    <option value="V1">V1</option>
-                  </select>
-                </div>
-                <button type="submit">test</button>
-              </form>
-            </div>
-          </div>
-          <div className="mt-6 flex flex-col md:flex-row justify-center gap-4">
-            <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full transition">
-              Start Climbing
-            </button>
-            <button className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full transition">
-              View Map
-            </button>
+              <div>
+                <label htmlFor="niveau" className="block mb-2 text-sm font-medium text-gray-300 text-nowrap">
+                  Niveau de difficulté:
+                </label>
+                <select name="niveau" id="niveau" className="text-white rounded-2xl border-2 bg-gray-800 h-10 border-gray-700 focus:ring-purple-600 focus:border-purple-600 w-full">
+                  <option value="V5">V5</option>
+                  <option value="V4">V4</option>
+                  <option value="V3">V3</option>
+                  <option value="V2">V2</option>
+                  <option value="V1">V1</option>
+                </select>
+              </div>
+              <div className="mt-6 flex flex-col md:flex-row justify-center gap-4">
+                <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full transition" type="submit">
+                  Start Climbing
+                </button>
+                <Link href={"/map"} className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full transition text-center">
+                  View Map
+                </Link>
+              </div>
+            </form>
+
           </div>
         </div>
       </section >
 
 
-    </>
+    </div>
   );
 }
