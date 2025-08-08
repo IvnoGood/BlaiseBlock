@@ -4,16 +4,33 @@ import LogoutButton from "@/components/supabase/Logout";
 import { AddUserInfo } from "@/components/supabase/saveUserInfo";
 import { supabase } from "@/components/supabase/supabaseClient";
 import { useEffect, useState } from 'react';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import { Avatar } from '@mui/material';
+
 
 export function Header() {
     const [username, setUsername] = useState('')
     const [profilepic, setProfilePic] = useState('')
     const [IsLogedIn, setIsLoggedIn] = useState(false)
 
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+
     function SetUserData() {
         const UserData = JSON.parse(localStorage.getItem("UserData"))[0]
         setUsername(UserData.Username)
-        setProfilePic(UserData.ProfilePicture || '/images/schema.PNG')
+        setProfilePic(UserData.ProfilePicture || null)
     }
 
     useEffect(() => {
@@ -39,25 +56,21 @@ export function Header() {
 
 
     return (
-        <header className="bg-gray-900 text-white shadow-md w-[100%] z-2 fixed">
+        <header className="bg-gray-900 text-white shadow-md w-full z-2 fixed top-0">
             <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                {/* Logo / Site Title */}
                 <div className="text-2xl font-bold tracking-tight">Blaise Pascal Bloc</div>
 
-                {/* Navigation Links */}
                 <nav className="space-x-6 text-gray-300">
                     <Link href="/" className="hover:text-white transition">Menu</Link>
                     <Link href="/bloc" className="hover:text-white transition">Blocs</Link>
-                    {/* <Link href="/carte" className="hover:text-white transition">Carte</Link> */}
                     <Link href="/a-propos" className="hover:text-white transition">A propos</Link>
                 </nav>
 
-                {/* CTA Button */}
                 {IsLogedIn ? (
-                    <div className='flex items-center gap-3'>
-                        <img src={profilepic} alt="profilepic" className='size-10 rounded-full' />
-                        <p>{username}</p>
-                        <LogoutButton></LogoutButton>
+                    <div className='flex items-center gap-3' onClick={handleClick}>
+                        <Avatar alt={username} src={profilepic} />
+                        <Typography variant='h6'>{username}</Typography>
+
                     </div>
                 ) : (
                     <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition text-sm cursor-pointer"
@@ -66,6 +79,19 @@ export function Header() {
                     </button>
                 )}
             </div>
+            {/*   <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+            >
+                log
+                <LogoutButton></LogoutButton>
+            </Popover> */}
         </header>
     );
 }

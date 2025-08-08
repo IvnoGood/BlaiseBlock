@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from "react";
 import PostCard from '@/components/ui/PostCard';
 import { PublishMenu } from '@/components/ui/PublishMenu';
-import '@/components/css/Research.css'
 import { supabase } from "@/components/supabase/supabaseClient";
-import { EditPost } from '@/components/ui/EditPost';
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button"
+import LoadingComponent from "@/components/ui/loading";
 
 export default function BlocRecherche() {
     const [prises, setPrises] = useState('');
@@ -15,14 +15,21 @@ export default function BlocRecherche() {
     const [posts, setPosts] = useState([]);
     const [more, setSeemore] = useState();
 
-    const [editMenu, setEditMenu] = useState();
+    const [isLoading, setIsLoading] = useState(true)
+
+    const [editData, setEditData] = useState([]);
+    const [isEdit, setIsEdit] = useState(false)
 
     function OnEdit(post) {
-        if (!editMenu && post) {
-            setEditMenu(<EditPost id={post.uuid} titre={post.titre} description={post.desc} image={post.picture} tag={post.tags} edit={OnEdit}></EditPost>)
-        } else {
-            setEditMenu(null)
-        }
+        setEditData({
+            'title': post.titre,
+            'description': post.desc,
+            'avatarFile': post.picture,
+            'listOfTags': [...post.tags],
+            'uuid': post.uuid
+        })
+        setIsEdit(true)
+        setAddPostDp('flex')
     }
 
     async function GetPosts() {
@@ -31,46 +38,52 @@ export default function BlocRecherche() {
             console.log("postFetchError", postFetchError)
         }
         setPosts(postFetch)
-        console.log(postFetch)
     }
 
     function CallCPublish() {
-        addPostDp == "none" ? setAddPostDp("flex") : setAddPostDp("none")
-    }
-
-    async function DeletePost(uuid) {
-        setPosts((prev) => prev.filter((p) => p.uuid !== uuid));
-        const { data, error } = await supabase.from("Posts").delete().eq("uuid", uuid)
-        if (error) {
-            console.error("error", error)
+        //addPostDp == "none" ? setAddPostDp("flex") : setAddPostDp("none");
+        if (addPostDp == "none") {
+            setAddPostDp("flex");
+            document.getElementById('html-root').style.overflow = 'hidden'
+        } else {
+            setAddPostDp("none");
+            document.getElementById('html-root').style.overflow = 'auto'
         }
     }
 
     useEffect(() => {
-        const queryParameters = new URLSearchParams(window.location.search);
-        setPrises(queryParameters.get("prises"));
-        setMouvements(queryParameters.get("mouvements"));
-        setNiveau(queryParameters.get("niveau"));
+        setIsLoading(true)
         async function Fetch() {
+            const queryParameters = new URLSearchParams(window.location.search);
+            setPrises(queryParameters.get("prises"));
+            setMouvements(queryParameters.get("mouvements"));
+            setNiveau(queryParameters.get("niveau"));
             await GetPosts()
+            setIsLoading(false)
         }
 
         Fetch()
     }, []);
 
+    if (isLoading) {
+        return (
+            <LoadingComponent Isloading={isLoading} />
+        )
+    }
     return (
         <>
 
-            <div className="py-16 bg-[#18181b] min-h-screen ResearchBody">
+            <div className="py-16 bg-gray-900 min-h-screen">
 
-                <section className="pt-5 px-6 flex backdrop-brightness-50 w-full h-20 content-center filterSection gap-3">
-                    <input type="text" />
-                    <button className="py-3 bg-purple-600 hover:bg-purple-700 text-white rounded transition px-6 h-11 cursor-pointer" onClick={() => CallCPublish()}>Publier</button>
-                    <button className="py-3 bg-red-600 hover:bg-red-700 text-white rounded transition px-6 h-11 cursor-pointer" onClick={() => GetPosts()}>Fetch ()</button>
+                <section className="pt-5 px-6 flex w-full h-20 gap-3">
+                    <Button className={'ml-auto'} onClick={CallCPublish}>
+                        <span className="material-symbols-outlined !text-xl">
+                            add
+                        </span>Publier</Button>
                 </section>
 
                 <section className="mt-15 p-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {posts.length > 0 ? (
                             <AnimatePresence>
                                 {posts.map(post => (
@@ -81,7 +94,7 @@ export default function BlocRecherche() {
                                         exit={{ opacity: 0, scale: 0.8 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <PostCard post={post} DeletePost={() => DeletePost(post.uuid)} edit={() => OnEdit(post)} />
+                                        <PostCard post={post} edit={() => OnEdit(post)} />
                                     </motion.div>
                                 ))}
                             </AnimatePresence>
@@ -93,8 +106,16 @@ export default function BlocRecherche() {
                         )}
                     </div>
                 </section>
-                <PublishMenu addPostDp={addPostDp} setAddPostDp={CallCPublish} fetch={GetPosts}></PublishMenu>
-                {editMenu}
+                <AnimatePresence>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <PublishMenu addPostDp={addPostDp} setAddPostDp={CallCPublish} fetch={GetPosts} postData={editData} isOnEdit={isEdit} setEditMode={setIsEdit} setEditData={setEditData} />
+                    </motion.div>
+                </AnimatePresence>
             </div>
         </>
     )
