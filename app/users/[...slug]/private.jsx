@@ -73,6 +73,10 @@ export default function UserPage({ slug }) {
                             <PasswordForm />
                         </div>
                     }
+                    <div>
+                        <p className="text-nowrap">Déconnection: </p>
+                        <Button variant="destructive" onClick={() => { supabase.auth.signOut(); localStorage.removeItem("UserData"); router.push('/') }}>Déconnection</Button>
+                    </div>
                 </section>
             </article>
         </div>

@@ -85,14 +85,19 @@ export default function BlocRecherche() {
         setPosts(postFetch)
     }
 
-    function CallCPublish() {
+    async function CallCPublish() {
         //addPostDp == "none" ? setAddPostDp("flex") : setAddPostDp("none");
-        if (addPostDp == "none") {
-            setAddPostDp("flex");
-            document.getElementById('html-root').style.overflow = 'hidden'
+        const user = await supabase.auth.getUser()
+        if (user.data.user === null) {
+            router.push('/login')
         } else {
-            setAddPostDp("none");
-            document.getElementById('html-root').style.overflow = 'auto'
+            if (addPostDp == "none") {
+                setAddPostDp("flex");
+                document.getElementById('html-root').style.overflow = 'hidden'
+            } else {
+                setAddPostDp("none");
+                document.getElementById('html-root').style.overflow = 'auto'
+            }
         }
     }
     const filterPosts = (tags) => {
