@@ -40,9 +40,11 @@ export default function RootLayout({ children }) {
       >
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <Header />
-            {children}
-            <Footer />
+            <main className="min-h-screen flex flex-col">
+              <Header />
+              {children}
+              <Footer />
+            </main>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

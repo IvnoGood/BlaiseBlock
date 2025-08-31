@@ -1,22 +1,22 @@
+'use client'
 import "@/components/css/Footer.css"
 import Image from 'next/image'
 import Link from 'next/link'
 import StarIcon from '@/public/svg/star.svg'
 
+/*** TODO: fix pearltrees logo ***/
+
 export function Footer() {
     return (
-        <footer className="bg-gray-900 text-gray-300 mt-auto border-t border-gray-700">
-            <div className="footer-liens">
-                <Link href={"/legal/About"}>A propos</Link>
+        <footer className="flex flex-col gap-10 md:gap-20 md:flex-row py-15 px-4 items-center justify-evenly bg-gray-900 text-gray-300 mt-auto border-t border-gray-700">
+            <div className="flex flex-col gap-3">
                 <Link href={"/legal/Terms"}>Conditions et termes </Link>
                 <Link href={"/legal/Consumer"}>Droit d'image</Link>
             </div>
             <div>
-                {/* <Image src="/slime-block.png" alt="slime-block" width={250}
-                    height={250} /> */}
-                <div className="text-2xl font-bold tracking-tight">Blaise Pascal Bloc</div>
+                <div className="text-3xl md:text-2xl font-bold tracking-tight">Blaise Pascal Bloc</div>
             </div>
-            <div className="socialmediaFooterIcons">
+            <div className="">
                 {/* Social Media Icons */}
                 <ul className="example-2">
                     <li className="icon-content">
@@ -57,14 +57,14 @@ export function Footer() {
                         </a>
                         <div className="tooltip">Instagram</div>
                     </li>
-                    <li className="icon-content">
+                    {/* <li className="icon-content">
                         <a data-social="pearltrees" aria-label="Pearltrees" href="https://www.pearltrees.com/t/videos-escalade-blaise-pascal/id27380627">
                             <div className="filled"></div>
                             {/* <Image src={"/svg/star.svg"} width={32} height={32} alt="pearltrees" /> */}
-                            <StarIcon />
+                    {/*<StarIcon />
                         </a>
                         <div className="tooltip">Pearltrees</div>
-                    </li>
+                    </li> */}
 
                 </ul>
             </div >

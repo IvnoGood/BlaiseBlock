@@ -14,11 +14,15 @@ import {
 import * as React from "react";
 import { supabase } from "../supabase/supabaseClient";
 import PostTag from "@/components/ui/PostTag";
+import { useRouter } from 'next/navigation'
+import Link from "next/link";
 
-export default function PostCard({ post, edit }) {
+export default function PostCard({ post, edit, getPosts, showControls = true }) {
     const [isowner, setIsowner] = useState(false);
     const [localLikes, setLocalLikes] = useState(post.likes)
     const [hasLikedCSS, setHasLikedCSS] = useState('')
+    const [isOffline, setIsOffline] = useState(false)
+    const router = useRouter()
 
     async function hasUserLikedPost() {
         if (post.likes > 0) {
@@ -32,17 +36,24 @@ export default function PostCard({ post, edit }) {
     }
 
     async function pressLike() {
+        if (isOffline) {
+            router.push('/register')
+        }
         if (hasLikedCSS === '') {
             const personnalAvatar = JSON.parse(localStorage.getItem("UserData"))[0].ProfilePicture || null;
             const personnalUsername = JSON.parse(localStorage.getItem("UserData"))[0].Username;
             let likesUser = []
+            let likesStats = []
             if (localLikes > 0) {
                 console.log(post.likes_user)
                 likesUser = [...post.likes_user]
+                likesStats = [...post.likes_stats]
                 likesUser.push({ avatar: personnalAvatar, username: personnalUsername })
+                likesStats.push({ time: new Date(), likesCount: localLikes + 1 })
                 console.log("final", likesUser)
             } else {
                 likesUser = [{ avatar: personnalAvatar, username: personnalUsername }]
+                likesStats = [{ time: new Date(), likesCount: localLikes + 1 }]
                 console.log(likesUser)
             }
             setLocalLikes(localLikes + 1)
@@ -50,7 +61,8 @@ export default function PostCard({ post, edit }) {
                 .from('Posts')
                 .update({
                     likes: localLikes + 1,
-                    likes_user: likesUser
+                    likes_user: likesUser,
+                    likes_stats: likesStats
                 })
                 .eq('uuid', post.uuid)
             if (error) {
@@ -97,8 +109,12 @@ export default function PostCard({ post, edit }) {
     }
 
     useEffect(() => {
-        const personnalUUID = JSON.parse(localStorage.getItem("UserData"))[0].identifier
-        if (post.CreatorUUID == personnalUUID) {
+        const personnalUUID = JSON.parse(localStorage.getItem("UserData")) || null
+        if (personnalUUID === null) {
+            setIsOffline(true)
+            return
+        }
+        if (post.CreatorUUID == personnalUUID[0].identifier) {
             setIsowner(true)
         } else {
             setIsowner(false)
@@ -107,7 +123,7 @@ export default function PostCard({ post, edit }) {
     }, [])
 
     return (
-        <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow max-w-100 max-h-300">
+        <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow max-w-100 max-h-300 min-w-50">
             <div className="p-5 flex flex-col">
                 <div className="flex items-center mb-3">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 overflow-hidden">
@@ -120,7 +136,9 @@ export default function PostCard({ post, edit }) {
                         )}
                     </div>
                     <div>
-                        <h4 className="font-medium text-white cursor-pointer hover:text-purple-500 transition-colors duration-400">{post.CreatorUsername}</h4>
+                        <Link href={'users/' + post.CreatorUUID}>
+                            <h4 className="font-medium text-white cursor-pointer hover:text-purple-500 transition-colors duration-400">{post.CreatorUsername}</h4>
+                        </Link>
                         <p className="text-white text-xs">{new Date(post.created_at).toLocaleDateString()}</p>
                     </div>
                 </div>
@@ -130,7 +148,7 @@ export default function PostCard({ post, edit }) {
 
                 <img src={post.picture} alt="image" height={300} className="w-full rounded-xl object-cover max-h-100 min-h-100" />
 
-                <p className="text-gray-300 mb-4 mt-2">{post.desc.substring(0, 150)}...</p>
+                <p className="text-gray-300 mb-4 mt-2 h-17 text-wrap overflow-hidden max-w-full">{post.desc.substring(0, 80)}{post.desc.length >= 80 ? '...' : ''}</p>
 
                 <div className="flex flex-wrap gap-2 mb-4">
                     {post.tags.map(tag => (
@@ -141,14 +159,9 @@ export default function PostCard({ post, edit }) {
                 </div>
 
                 <div className="flex justify-between items-center text-sm text-gray-500">
-                    <div className="flex space-x-4">
+
+                    {showControls && <div className="flex gap-4 h-5">
                         {/* <button className="flex items-center hover:text-purple-600">
-                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                            </svg>
-                            {post.likes}
-                        </button>
-                        <button className="flex items-center hover:text-purple-600">
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
@@ -180,7 +193,7 @@ export default function PostCard({ post, edit }) {
                                             <AlertDialogTitle>Est tu vraiment sûr?</AlertDialogTitle>
                                             <AlertDialogDescription>
                                                 Cette action ne peut être annulée. Cela supprimera définitivement votre
-                                                compte et supprimez vos données de nos serveurs.
+                                                publication de nos serveurs.
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
@@ -191,8 +204,10 @@ export default function PostCard({ post, edit }) {
                                 </AlertDialog>
                             </>
                         )}
-                    </div>
-                    <button className="hover:text-purple-600 cursor-pointer">Read more →</button>
+                    </div>}
+                    <Link href={`/bloc/${post.uuid}`}>
+                        <button className="hover:text-purple-600 cursor-pointer">Read more →</button>
+                    </Link>
                 </div>
             </div>
         </div>

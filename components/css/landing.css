@@ -5,15 +5,23 @@
     width: 100%;
 }
 
+/*
+https: //pixabay.com/get/gf1b4bfb462bc392dc365af7cbc9d987cf2c1c516b3e175ac31583454953150646afddc71b52f85b652075384f32b61823167eb9de0faf2e28f3c0078a1d3072a_1920.jpg --> https://pixabay.com/photos/spain-sea-ocean-rocks-stones-1859434/
+https: //pixabay.com/get/ga76a8b49d54c06b97a2d216a9167d2d1e84c33682fbdff95346fcd7d13c748797d4c347b5642932c028f679efd5b0d3dbfb21c9526f5fa3917aba8849144e913_1920.jpg --> https://pixabay.com/photos/sea-rocks-coast-fog-beach-mist-7193894/
+https: //pixabay.com/get/g2a6ec588f89dd38a4c914a2a80d08053bc9a4fbc26d7fd398ab22d5b81113fe216193666858dcf7c278e2be62e9766838052578da5f1faf71854fcd285bed3d0_1920.jpg --> https://pixabay.com/photos/sea-ocean-water-stones-boulders-1975403/
+https: //pixabay.com/get/g1b9bd286cb82813d646fb3baceba5eed57c7b6ae75f85094beaf6ce497678f87594d3eb1e21f1b728e1b9d4865db95cbea695f92442860799587144c1f972ac1_1920.jpg --> https://pixabay.com/photos/rock-climbing-free-climbing-climbing-2264698/
+https: //pixabay.com/get/g639ec27bd9bb0b22c326e5c5fd41f01a43cdecc9e24c4a27558c8e599ef0685852e4c4ca13cdd998b37041f2c930e45f11edea6daaf7ef4ce52149afcba1e20b_1920.jpg --> https://pixabay.com/photos/bouldering-climb-sports-stone-5190789/
+*/
+
 .landingSectionBackground {
-    background-image: url("/images/room.jpg");
+    background-image: url("/images/person-boulder.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     height: 100vh;
     width: 100%;
     z-index: 0;
-    filter: blur(4px);
+    filter: blur(0px);
 }
 
 .landingTitle {

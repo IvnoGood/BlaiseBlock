@@ -2,7 +2,21 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/components/supabase/supabaseClient";
 import { Input } from '@/components/ui/input'
 import { cn } from "@/lib/utils";
+import { Textarea } from "./textarea";
 import * as React from "react";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Button } from "./button";
+import { Ring } from 'ldrs/react'
+import 'ldrs/react/Ring.css'
+import { TagIcon } from "lucide-react";
 
 export function PublishMenu({ addPostDp, setAddPostDp, fetch, postData, isOnEdit, setEditMode, setEditData }) {
     const [tag, setTag] = useState('');
@@ -11,20 +25,21 @@ export function PublishMenu({ addPostDp, setAddPostDp, fetch, postData, isOnEdit
     const [title, setTitle] = useState(isOnEdit ? postData.title : '');
     const [description, setDescription] = useState(isOnEdit ? postData.description : '');
     const [avatarFile, setAvatarFile] = useState('');
-    const [displayImg, setDisplayImg] = useState(isOnEdit ? postData.avatarFile : '')
+    const [displayImg, setDisplayImg] = useState(isOnEdit ? postData.avatarFile : '');
+
+    const [isLoading, setIsLoading] = useState(false)
 
     function closeMenu() {
         setAddPostDp('none')
         setEditMode(false)
         setEditData([])
-        window.location.reload()
+        //window.location.reload()
     }
 
-    function TagsOnchange(event) {
-        const currentTag = event.target.value
-        setTag(currentTag)
-        if (currentTag != "placeholder") {
-            setListOfTags([...listOfTags, currentTag.trim()]);
+    function TagsOnchange(value) {
+        setTag(value)
+        if (value != "placeholder") {
+            setListOfTags([...listOfTags, value.trim()]);
         }
     }
 
@@ -88,10 +103,11 @@ export function PublishMenu({ addPostDp, setAddPostDp, fetch, postData, isOnEdit
                 console.error("Error while saving post", error)
             }
         }
+        setIsLoading(true)
         if (avatarFile !== '') await SaveAvatar() //Saves image on db
         await setAddPostDp()
+        setIsLoading(false)
         await fetch()
-        window.location.reload()
     }
 
     async function SaveAvatar() {
@@ -133,41 +149,48 @@ export function PublishMenu({ addPostDp, setAddPostDp, fetch, postData, isOnEdit
     }
 
     useEffect(() => {
-        if (isOnEdit) {
-            setListOfTags([...postData.listOfTags])
-            setTitle(postData.title)
-            setDescription(postData.description)
-            setDisplayImg(postData.avatarFile)
-        }
-    }, [isOnEdit, postData])
+
+        setListOfTags(isOnEdit ? postData.listOfTags : [])
+        setTitle(isOnEdit ? postData.title : '')
+        setDescription(isOnEdit ? postData.description : '')
+        setDisplayImg(isOnEdit ? postData.avatarFile : '')
+    }, [addPostDp])
 
     return (
-        <div className="fixed inset-0 bg-[rgba(0,0,0,0.75)] items-center justify-center z-50 p-4" style={{ display: addPostDp }}>
-            <div className="bg-gray-900 rounded-lg shadow-lg p-6 flex gap-5 max-w-200 w-fit">
-                <div className="max-w-125">
-                    <div className="flex items-center mb-4">
-                        <button onClick={closeMenu} className="cursor-pointer">
-                            <span className="material-symbols-outlined mr-5 text-white">close</span>
-                        </button>
-                        <h1 className="text-2xl font-bold text-white">{isOnEdit ? 'Edition de post' : 'Nouveau post'}</h1>
-                    </div>
-                    <form action={(e) => PublishPost(e)}>
+        <div className="h-screen w-full max-w-full overflow-x-hidden absolute top-0 left-0 pt-35 p-3 bg-[rgba(0,0,0,0.75)] flex  place-content-center sm:items-center" style={{ display: addPostDp }}>
+            {/* absolute top-0 left-0 max-h-screen  items-center p-4 pt-4 overflow-x-scroll */}
+            <div className="bg-gray-900 rounded-lg p-6 h-fit flex flex-col gap-3">
+                {/*bg-gray-900 rounded-lg shadow-lg p-6 flex gap-5 w-full flex-col lg:flex-row */}
+                <div className="flex items-center w-full justify-center gap-3">
+                    <button onClick={closeMenu} className="cursor-pointer flex items-center">
+                        <span className="material-symbols-outlined text-white text-center">close</span>
+                    </button>
+                    <h1 className="text-2xl font-bold text-white">{isOnEdit ? 'Edition de post' : 'Nouveau post'}</h1>
+                </div>
+                <div className="flex flex-col lg:flex-row gap-5">
+                    <form action={(e) => PublishPost(e)} className="[&_button]:px-4 [&_button]:py-[23px]">
                         <Input
                             type="text"
                             name="title"
                             id="title"
-                            placeholder="Titre du bloc"
+                            placeholder="Titre de la publication"
                             className="w-full px-4 py-3 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 mb-2 h-12"
                             value={title}
                             onChange={(event) => setTitle(event.target.value)}
                         />
 
-                        <Input
-                            type="text"
-                            name="desc"
+                        {/*                     <Input
+                        type="text"
+                        name="desc"
+                        id="desc"
+                        placeholder="Petite description"
+                        className={"w-full px-4 py-3 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 mb-2 h-12"}
+                        value={description}
+                    /> */}
+                        <Textarea
+                            placeholder="Description de la publication"
                             id="desc"
-                            placeholder="Petite description"
-                            className={"w-full px-4 py-3 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 mb-2 h-12"}
+                            className={"w-full px-4 py-3 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 mb-2 h-12 resize-none sm:max-w-100 md:max-w-150 2xl:max-w-200"}
                             value={description}
                             onChange={(event) => setDescription(event.target.value)}
                             required
@@ -177,42 +200,73 @@ export function PublishMenu({ addPostDp, setAddPostDp, fetch, postData, isOnEdit
                             type="file"
                             name="image"
                             id="image"
-                            className="w-full px-4 py-3 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 mb-2 h-12 placeholder:text-red-500"
+                            className=" w-full px-4 py-3 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 mb-2 h-12 placeholder:text-red-500"
                             accept="image/*"
                             onChange={(e) => onFileInputChange(e)}
                             required={!isOnEdit}
 
                         />
 
-                        <select
-                            name="tags"
-                            id="tags"
-                            onChange={(event) => TagsOnchange(event)}
-                            defaultValue={tag}
-                            className={cn(
-                                "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-                                "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-                                "w-full px-4 py-3 rounded-(--radius) bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 mb-2 h-12"
-                            )}
+                        <Select
+                            onValueChange={TagsOnchange}
                             required
                         >
-                            <option value="placeholder">--Prises--</option>
-                            <option value="pinces">Pinces</option>
-                            <option value="bacs">Bacs</option>
-                            <option value="reglettes">Réglettes</option>
-                            <option value="boules">Boules</option>
+                            <SelectTrigger className="w-full bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 active:ring-purple-500 active:ring-2 mb-2">
+                                <SelectValue placeholder="Selectionne des labels" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Prises</SelectLabel>
+                                    <SelectItem value="pinces">Pinces</SelectItem>
+                                    <SelectItem value="bacs">Bacs</SelectItem>
+                                    <SelectItem value="reglettes">Réglettes</SelectItem>
+                                    <SelectItem value="boules">Boules</SelectItem>
+                                </SelectGroup>
+                                <SelectGroup>
+                                    <SelectLabel>Mouvements</SelectLabel>
+                                    <SelectItem value="statique">Statique</SelectItem>
+                                    <SelectItem value="dynamique-balance">Dynamique balancé</SelectItem>
+                                </SelectGroup>
+                                <SelectGroup>
+                                    <SelectLabel>Difficultée</SelectLabel>
+                                    <SelectItem value="V5">V5</SelectItem>
+                                    <SelectItem value="V4">V4</SelectItem>
+                                    <SelectItem value="V3">V3</SelectItem>
+                                    <SelectItem value="V2">V2</SelectItem>
+                                    <SelectItem value="V1">V1</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
 
-                            <option value="placeholder">--Mouvements--</option>
-                            <option value="statique">Statique</option>
-                            <option value="dynamique-balance">Dynamique balancé</option>
+                        {/*                     <select
+                        name="tags"
+                        id="tags"
+                        onChange={(event) => TagsOnchange(event)}
+                        defaultValue={tag}
+                        className={cn(
+                            "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+                            "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+                            "w-full px-4 py-3 rounded-(--radius) bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 mb-2 h-12"
+                        )}
+                        required
+                    >
+                        <option value="placeholder">--Prises--</option>
+                        <option value="pinces">Pinces</option>
+                        <option value="bacs">Bacs</option>
+                        <option value="reglettes">Réglettes</option>
+                        <option value="boules">Boules</option>
 
-                            <option value="placeholder">--Difficultée--</option>
-                            <option value="V5">V5</option>
-                            <option value="V4">V4</option>
-                            <option value="V3">V3</option>
-                            <option value="V2">V2</option>
-                            <option value="V1">V1</option>
-                        </select>
+                        <option value="placeholder">--Mouvements--</option>
+                        <option value="statique">Statique</option>
+                        <option value="dynamique-balance">Dynamique balancé</option>
+
+                        <option value="placeholder">--Difficultée--</option>
+                        <option value="V5">V5</option>
+                        <option value="V4">V4</option>
+                        <option value="V3">V3</option>
+                        <option value="V2">V2</option>
+                        <option value="V1">V1</option>
+                    </select> */}
 
                         <ul className="flex flex-wrap gap-2 mb-4">
                             {listOfTags.map((tag, index) => (
@@ -220,7 +274,7 @@ export function PublishMenu({ addPostDp, setAddPostDp, fetch, postData, isOnEdit
                                     <span className="bg-purple-600 text-white text-xs px-2 py-1 rounded flex items-center">
                                         #{tag}
 
-                                        <button onClick={() => { setListOfTags(listOfTags.filter((word) => word != tag)); }} className="text-gray-100 transition-colors hover:text-red-500 ml-2" >
+                                        <button onClick={() => { setListOfTags(listOfTags.filter((word) => word != tag)); }} className="text-gray-100 transition-colors hover:text-red-500 ml-2 !py-0 !px-0" >
                                             <span className="material-symbols-outlined !text-sm">close</span>
                                         </button>
                                     </span>
@@ -228,16 +282,20 @@ export function PublishMenu({ addPostDp, setAddPostDp, fetch, postData, isOnEdit
                             ))}
                         </ul>
 
-                        <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded" type="submit">
-                            Publier
-                        </button>
+                        <Button className="w-full !py-2 !px-4" type="submit">
+                            {isLoading && <Ring
+                                size="13"
+                                stroke="2"
+                                bgOpacity="0"
+                                speed="2"
+                                color="white"
+                            />} Publier
+                        </Button>
                     </form>
+                    {displayImg && (
+                        <img src={displayImg} alt="display image" className="rounded-xl object-cover max-h-100 min-h-100" />
+                    )}
                 </div>
-                {displayImg && (
-                    <div className="w-fit">
-                        <img src={displayImg} alt="display image" className="w-full rounded-xl object-cover min-w-90 max-w-90 max-h-100 min-h-100" />
-                    </div>
-                )}
             </div>
         </div>
     )
