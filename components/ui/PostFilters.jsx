@@ -78,7 +78,7 @@ export default function PostFilters({ form }) {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>{filter.label}</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue placeholder={filter.placeholder} />

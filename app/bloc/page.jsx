@@ -30,8 +30,15 @@ export default function BlocRecherche() {
 
     const router = useRouter()
     const { height, width } = useWindowDimensions();
+
+    const defaultValues = {
+        prises: '',
+        mouvements: '',
+        difficulte: ''
+    }
+
     const form = useForm({
-        resolver: zodResolver(FormSchema),
+        resolver: zodResolver(FormSchema), defaultValues
     })
 
     function sleep(ms) {
@@ -143,13 +150,16 @@ export default function BlocRecherche() {
                         <Form {...form}>
                             <form className="flex flex-col w-full gap-5 lg:flex-row" onSubmit={form.handleSubmit(onSubmit)}>
                                 <PostFilters form={form} />
-                                <Button type='submit' variant="secondary">
-                                    <span className="material-symbols-outlined !text-xl">
+                                <Button
+                                    type="submit"
+                                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm bg-gradient-to-r from-secondary to-accent text-white shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300 ease-in-out"
+                                >
+                                    <span className="material-symbols-outlined !text-xl mr-2">
                                         search
                                     </span>
                                     Chercher
                                 </Button>
-                                {prises !== null || mouvements !== null || niveau !== null ? <Button variant={'outline'} onClick={() => onClear()}>
+                                {prises !== null || mouvements !== null || niveau !== null ? <Button variant={'outline'} onClick={() => { onClear(); form.reset(defaultValues) }}>
                                     <span className="material-symbols-outlined">
                                         clear_all
                                     </span>
