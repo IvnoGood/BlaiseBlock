@@ -20,14 +20,13 @@ export default function UserPage({ slug }) {
 
     async function checkPagePermissions() {
         const user = await supabase.auth.getUser();
-        const userId = user.data.user.id;
-        if (userId !== slug) {
-            router.push(`users/${slug}/`)
-            return
+        const uuid = user.data.user ? user.data.user.id : null
+        if (uuid !== slug) {
+            router.push(`/users/${slug}`);
+        } else {
+            setUserData(user.data.user)
+            setIsLoading(false)
         }
-        setUserData(user.data.user)
-        console.log(user.data.user)
-        setIsLoading(false)
     }
 
     useEffect(() => {

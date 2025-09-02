@@ -32,32 +32,33 @@ export default function RegisterPage() {
     }
 
     async function AddUserInfo() {
-        const { data: { user }, error1 } = await supabase.auth.getUser()
-        if (error1) {
-            console.log(error1)
+        const { data: user, error } = await supabase.auth.getUser()
+        if (error) {
+            console.log(error)
         }
-        console.log('User ID:', user?.id)
+        console.log(user)
+        console.log('User ID:', user.user.id)
 
-        const { data: { tableData }, error } = await supabase
+        const { error: placeError } = await supabase
             .from("Users") // Table name
             .insert([
                 {
-                    identifier: user?.id,
+                    identifier: user.user.id,
                     Username: username
                 } // New row data
             ]);
 
-        if (error) {
+        if (placeError) {
             console.error("Insert Error:", error.message);
         }
 
         //! Save data to local storage
-        const { data, error2 } = await supabase
+        const { data, error: userDataError } = await supabase
             .from("Users")
             .select("*")
-            .eq('identifier', user?.id);
-        if (error2) {
-            console.error("Error fetching user data:", error2.message);
+            .eq('identifier', user.user.id);
+        if (userDataError) {
+            console.error("Error fetching user data:", userDataError.message);
         } else {
             console.log(data)
             localStorage.setItem("UserData", JSON.stringify(data))
@@ -74,7 +75,7 @@ export default function RegisterPage() {
         if (error) {
             setError(error.message)
         }
-        router.push("/")
+        //router.push("/")
     }
 
     useEffect(() => {

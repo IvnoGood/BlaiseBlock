@@ -38,51 +38,52 @@ export default function PostCard({ post, edit, getPosts, showControls = true }) 
     async function pressLike() {
         if (isOffline) {
             router.push('/register')
-        }
-        if (hasLikedCSS === '') {
-            const personnalAvatar = JSON.parse(localStorage.getItem("UserData"))[0].ProfilePicture || null;
-            const personnalUsername = JSON.parse(localStorage.getItem("UserData"))[0].Username;
-            let likesUser = []
-            let likesStats = []
-            if (localLikes > 0) {
-                console.log(post.likes_user)
-                likesUser = [...post.likes_user]
-                likesStats = [...post.likes_stats]
-                likesUser.push({ avatar: personnalAvatar, username: personnalUsername })
-                likesStats.push({ time: new Date(), likesCount: localLikes + 1 })
-                console.log("final", likesUser)
-            } else {
-                likesUser = [{ avatar: personnalAvatar, username: personnalUsername }]
-                likesStats = [{ time: new Date(), likesCount: localLikes + 1 }]
-                console.log(likesUser)
-            }
-            setLocalLikes(localLikes + 1)
-            const { error } = await supabase
-                .from('Posts')
-                .update({
-                    likes: localLikes + 1,
-                    likes_user: likesUser,
-                    likes_stats: likesStats
-                })
-                .eq('uuid', post.uuid)
-            if (error) {
-                console.error("Error while saving post", error)
-            }
         } else {
-            const personnalUsername = JSON.parse(localStorage.getItem("UserData"))[0].Username;
-            let likesUser = post.likes_user.filter((user) => user.username !== personnalUsername)
-            console.log(likesUser)
-            setLocalLikes(localLikes - 1)
-            setHasLikedCSS('')
-            const { error } = await supabase
-                .from('Posts')
-                .update({
-                    likes: localLikes - 1,
-                    likes_user: likesUser
-                })
-                .eq('uuid', post.uuid)
-            if (error) {
-                console.error("Error while saving post", error)
+            if (hasLikedCSS === '') {
+                const personnalAvatar = JSON.parse(localStorage.getItem("UserData"))[0].ProfilePicture || null;
+                const personnalUsername = JSON.parse(localStorage.getItem("UserData"))[0].Username;
+                let likesUser = []
+                let likesStats = []
+                if (localLikes > 0) {
+                    console.log(post.likes_user)
+                    likesUser = [...post.likes_user]
+                    likesStats = [...post.likes_stats]
+                    likesUser.push({ avatar: personnalAvatar, username: personnalUsername })
+                    likesStats.push({ time: new Date(), likesCount: localLikes + 1 })
+                    console.log("final", likesUser)
+                } else {
+                    likesUser = [{ avatar: personnalAvatar, username: personnalUsername }]
+                    likesStats = [{ time: new Date(), likesCount: localLikes + 1 }]
+                    console.log(likesUser)
+                }
+                setLocalLikes(localLikes + 1)
+                const { error } = await supabase
+                    .from('Posts')
+                    .update({
+                        likes: localLikes + 1,
+                        likes_user: likesUser,
+                        likes_stats: likesStats
+                    })
+                    .eq('uuid', post.uuid)
+                if (error) {
+                    console.error("Error while saving post", error)
+                }
+            } else {
+                const personnalUsername = JSON.parse(localStorage.getItem("UserData"))[0].Username;
+                let likesUser = post.likes_user.filter((user) => user.username !== personnalUsername)
+                console.log(likesUser)
+                setLocalLikes(localLikes - 1)
+                setHasLikedCSS('')
+                const { error } = await supabase
+                    .from('Posts')
+                    .update({
+                        likes: localLikes - 1,
+                        likes_user: likesUser
+                    })
+                    .eq('uuid', post.uuid)
+                if (error) {
+                    console.error("Error while saving post", error)
+                }
             }
         }
     }

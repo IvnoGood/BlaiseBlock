@@ -37,12 +37,10 @@ export default function EditProfilePage({ slug }) {
     // 1. Fetch user data and check permissions on page load
     useEffect(() => {
         async function fetchUserDataAndCheckPermissions() {
-            const { data: { user: authUser } } = await supabase.auth.getUser();
-
-            // SECURITY CHECK: If no one is logged in or the user ID doesn't match the URL, redirect.
-            if (!authUser || authUser.id !== slug) {
-                router.push(`/users/${slug}`); // Redirect to the public profile
-                return;
+            const user = await supabase.auth.getUser();
+            const uuid = user.data.user ? user.data.user.id : null
+            if (uuid !== slug) {
+                router.push(`/users/${slug}`);
             }
 
             // Fetch the public profile from the 'Users' table

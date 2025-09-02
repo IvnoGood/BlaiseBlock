@@ -26,11 +26,10 @@ export default function HomePage({ slug }) {
             .select('*')
             .eq('identifier', slug)
         if (userFetchError) {
-            console.log("userFetchError", userFetchError)
+            console.error("userFetchError", userFetchError)
         } else {
             setUser(userFetch[0])
         }
-        console.log(userFetch[0])
     }
 
     useEffect(() => {

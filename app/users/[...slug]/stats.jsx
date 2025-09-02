@@ -27,12 +27,12 @@ export default function StatsPage({ slug }) {
 
     async function checkPagePermissions() {
         const user = await supabase.auth.getUser();
-        const userId = user.data.user.id;
-        if (userId !== slug) {
-            router.push(`users/${slug}/`)
-            return
+        const uuid = user.data.user ? user.data.user.id : null
+        if (uuid !== slug) {
+            router.push(`/users/${slug}`);
+        } else {
+            setIsLoading(false)
         }
-        setIsLoading(false)
     }
 
     async function getPosts() {
@@ -41,7 +41,7 @@ export default function StatsPage({ slug }) {
             .select('*')
             .eq('CreatorUUID', slug)
         if (postFetchError) {
-            console.log("postFetchError", postFetchError)
+            console.error("postFetchError", postFetchError)
         } else {
             setPostsList(postFetch)
         }

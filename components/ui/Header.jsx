@@ -10,7 +10,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useRouter } from "next/navigation"
 
 export function Header() {
-    const [username, setUsername] = useState('')
     const [profilepic, setProfilePic] = useState('')
     const [IsLogedIn, setIsLoggedIn] = useState(false)
     const [usernameHover, setUsernameHover] = useState(false)
@@ -30,29 +29,24 @@ export function Header() {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
-    function SetUserData() {
-        const UserData = JSON.parse(localStorage.getItem("UserData"))[0]
-        setUsername(UserData.Username)
-        setProfilePic(UserData.ProfilePicture || null)
-    }
-
     useEffect(() => {
         async function Check() {
             setIsLoading(true)
             const raw = localStorage.getItem("UserData");
-
-            if (!raw || raw === "undefined" || raw === "[]") {
+            const UserData = raw ? JSON.parse(raw)[0] : null
+            if (UserData) {
+                setIsLoggedIn(true);
+                const UserData = JSON.parse(localStorage.getItem("UserData"))[0]
+                setProfilePic(UserData.ProfilePicture || null)
+            } else {
                 const { data: user } = await supabase.auth.getUser();
                 if (!user || !user.user) {
                     setIsLoggedIn(false);
                 } else {
                     await AddUserInfo();
                     setIsLoggedIn(true);
-                    SetUserData();
+                    setProfilePic(null)
                 }
-            } else {
-                setIsLoggedIn(true);
-                SetUserData();
             }
             setIsLoading(false)
         }
@@ -74,7 +68,7 @@ export function Header() {
                                     const userId = user.data.user.id;
                                     router.push('/users/' + userId)
                                 }}>
-                                    <Avatar alt={username} src={profilepic} />
+                                    <Avatar src={profilepic} />
                                     {/* <Typography className={usernameHover ? 'right-0 relative animate-entry flex' : 'right-[-100px] hidden absolute animate-entry'} variant='h6'>{username}</Typography> */}
 
                                 </div>

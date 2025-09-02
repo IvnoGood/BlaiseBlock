@@ -61,14 +61,14 @@ export function AppSidebar() {
 
     async function checkPagePermissions() {
         const user = await supabase.auth.getUser();
-        const userId = user.data.user.id;
-        if (userId !== slug) {
+        const uuid = user.data.user ? user.data.user.id : null
+        if (uuid === slug) {
+            setIsOwner(true)
+            setIsLoading(false)
+        } else {
             setIsOwner(false)
             setIsLoading(false)
-            return
         }
-        setIsOwner(true)
-        setIsLoading(false)
     }
 
     useEffect(() => {

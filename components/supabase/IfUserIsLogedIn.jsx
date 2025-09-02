@@ -31,11 +31,9 @@ export function useIsLoggedIn() {
         const { data: { user } } = await supabase.auth.getUser();
 
         if (user) {
-            console.log("User is logged in");
             router.push("/");
             return true;
         } else {
-            console.log("User not logged in");
             return false;
         }
     };
