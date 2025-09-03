@@ -143,9 +143,8 @@ export default function BlocRecherche() {
     }
     return (
         <>
-            <div className="lg:py-16 pt-25 bg-gray-900 min-h-screen relative">
-
-                <section className="pt-5 px-6 flex w-full gap-3 flex-col lg:flex-row min-h-20">
+            <div className=" bg-gray-900 min-h-screen relative">
+                <section className="pt-8 pb-8 px-6 flex w-full gap-3 flex-col lg:flex-row min-h-20">
                     <div className={seeFilters ? 'flex lg:w-fit' : 'hidden'}>
                         <Form {...form}>
                             <form className="flex flex-col w-full gap-5 lg:flex-row" onSubmit={form.handleSubmit(onSubmit)}>
@@ -181,7 +180,7 @@ export default function BlocRecherche() {
                         </span>Publier</Button>
                 </section>
 
-                <section className="p-8">
+                <section className="px-5">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                         {posts.length > 0 && posts.filter((item) => filterPosts(item.tags)).length > 0 ? (
                             <AnimatePresence>

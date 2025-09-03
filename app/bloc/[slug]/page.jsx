@@ -151,7 +151,7 @@ export default function Page({ params }) {
     }
 
     return (
-        <div className="lg:p-16 pt-18 bg-gray-900 min-h-screen max-w-screen overflow-x-hidden">
+        <div className="bg-gray-900 min-h-screen max-w-screen overflow-x-hidden">
             <article>
                 <section className='flex flex-col lg:flex-row justify-between gap-10 py-10 p-8 sm:content-center xl:max-w-full min-h-screen items-center'>
 

@@ -3,7 +3,7 @@
 
 export default function AboutPage() {
     return (
-        <div className="bg-gray-900 text-white px-6 py-12 pt-30 md:pt-25 flex-1">
+        <div className="bg-gray-900 text-white px-6 py-12 md:pt-10 flex-1">
             <div className="max-w-4xl mx-auto space-y-10">
                 {/* Title */}
                 <section className="text-center">
