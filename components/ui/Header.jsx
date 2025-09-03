@@ -98,6 +98,10 @@ export function Header() {
                         <Link href="/a-propos" className="hover:text-white transition">
                             <Button variant='ghost'>A propos</Button>
                         </Link>
+
+                        <Link href="/articles" className="hover:text-white transition">
+                            <Button variant='ghost'>Articles</Button>
+                        </Link>
                     </nav>
                 </div>
             </div>
